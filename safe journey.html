@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Journey Game</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #333;
+        }
+        canvas {
+            background-color: #111;
+            border: 1px solid #fff;
+        }
+        #scoreDisplay, #timerDisplay {
+            position: absolute;
+            color: #fff;
+            font-size: 20px;
+        }
+        #scoreDisplay {
+            top: 10px;
+            left: 10px;
+        }
+        #timerDisplay {
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="scoreDisplay">Score: 0</div>
+    <div id="timerDisplay">Time: 30</div>
+
+    <script>
+    window.onload = function() {
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Adjust canvas size to fit screen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth > 600 ? 600 : window.innerWidth;
+            canvas.height = window.innerHeight > 800 ? 800 : window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const laneWidth = canvas.width / 3;
+        const playerHeight = canvas.height / 12;
+        const playerWidth = laneWidth / 2;
+        let playerX = laneWidth + (laneWidth - playerWidth) / 2;
+        let playerY = canvas.height - playerHeight - 20;
+        let playerLane = 1;
+
+        let score = 0;
+        let timer = 30;
+        let obstacles = [];
+        let tokens = [];
+        let gameInterval;
+        let timerInterval;
+
+        function startGame() {
+            gameInterval = setInterval(gameLoop, 1000 / 60); // 60 FPS
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function resetGame() {
+            score = 0;
+            timer = 30;
+            playerLane = 1;
+            playerX = laneWidth + (laneWidth - playerWidth) / 2;
+            obstacles = [];
+            tokens = [];
+            clearInterval(gameInterval);
+            clearInterval(timerInterval);
+            startGame();
+        }
+
+        function updateTimer() {
+            timer--;
+            document.getElementById('timerDisplay').innerText = `Time: ${timer}`;
+            if (timer <= 0) {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            clearInterval(timerInterval);
+            alert(`Game Over! Your score: ${score}`);
+            const solanaAddress = prompt("Enter your Solana address to be whitelisted:");
+            if (solanaAddress) {
+                console.log(`Address: ${solanaAddress}, Score: ${score}`);
+            }
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(playerX, playerY, playerWidth, playerHeight);
+        }
+
+        function drawObstacles() {
+            obstacles.forEach((obs, index) => {
+                ctx.fillStyle = 'red';
+                ctx.fillRect(obs.x, obs.y, playerWidth, playerHeight);
+                obs.y += 5; // Move obstacle down
+                if (obs.y > canvas.height) {
+                    obstacles.splice(index, 1); // Remove if off-screen
+                }
+                // Check collision
+                if (obs.y + playerHeight > playerY && obs.y < playerY + playerHeight &&
+                    obs.x < playerX + playerWidth && obs.x + playerWidth > playerX) {
+                    endGame();
+                }
+            });
+        }
+
+        function drawTokens() {
+            tokens.forEach((token, index) => {
+                ctx.fillStyle = 'green';
+                ctx.beginPath();
+                ctx.arc(token.x + playerWidth / 2, token.y + playerWidth / 2, 15, 0, Math.PI * 2);
+                ctx.fill();
+                token.y += 3; // Move token down
+                if (token.y > canvas.height) {
+                    tokens.splice(index, 1); // Remove if off-screen
+                }
+                // Check collision
+                if (token.y + playerWidth > playerY && token.y < playerY + playerHeight &&
+                    token.x < playerX + playerWidth && token.x + playerWidth > playerX) {
+                    score += 10;
+                    tokens.splice(index, 1);
+                    document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
+                }
+            });
+        }
+
+        function drawLanes() {
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            for (let i = 1; i < 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * laneWidth, 0);
+                ctx.lineTo(i * laneWidth, canvas.height);
+                ctx.stroke();
+            }
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawLanes();
+            drawPlayer();
+            drawObstacles();
+            drawTokens();
+
+            // Randomly add obstacles
+            if (Math.random() < 0.02) {
+                const lane = Math.floor(Math.random() * 3);
+                obstacles.push({ x: lane * laneWidth, y: -playerHeight });
+            }
+
+            // Randomly add tokens
+            if (Math.random() < 0.01) {
+                const lane = Math.floor(Math.random() * 3);
+                tokens.push({ x: lane * laneWidth, y: -playerWidth });
+            }
+        }
+
+        function movePlayer(direction) {
+            if (direction === 'left' && playerLane > 0) {
+                playerLane--;
+                playerX -= laneWidth;
+            } else if (direction === 'right' && playerLane < 2) {
+                playerLane++;
+                playerX += laneWidth;
+            }
+        }
+
+        // Handle clicks/taps for movement
+        canvas.addEventListener('click', (e) => {
+            const clickX = e.clientX - canvas.getBoundingClientRect().left;
+            if (clickX < canvas.width / 2) {
+                movePlayer('left');
+            } else {
+                movePlayer('right');
+            }
+        });
+
+        // Handle touch events for mobile devices
+        canvas.addEventListener('touchstart', (e) => {
+            const touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+            if (touchX < canvas.width / 2) {
+                movePlayer('left');
+            } else {
+                movePlayer('right');
+            }
+        });
+
+        // Start the game
+        startGame();
+    };
+    </script>
+</body>
+</html>
