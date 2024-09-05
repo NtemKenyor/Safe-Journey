@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -180,7 +182,7 @@
         }
     </script>
 
-<script>
+    <script>
     window.onload = function() {
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -199,11 +201,6 @@
         let playerX = laneWidth + (laneWidth - playerWidth) / 2;
         let playerY = canvas.height - playerHeight - 20;
         let playerLane = 1;
-        let isJumping = false; // Track if the player is jumping
-        let jumpStartY = playerY; // Initial player Y position
-        let jumpHeight = 100; // Maximum height of jump
-        let jumpSpeed = 5; // Speed of the jump
-        let jumpDirection = 1; // 1 for up, -1 for down
 
         let score = 0;
         let timer = 30;
@@ -243,8 +240,10 @@
             alert(`Game Over! Your score: ${score}`);
             const walletChoice = prompt("Do you have a Solana wallet: Solfare or Phantom? (yes/no)").toLowerCase();
             if (walletChoice === 'yes') {
+                // Open wallet selection buttons
                 document.getElementById('walletButtons').style.display = 'flex';
             } else {
+                // Manual input
                 manualInput();
             }
         }
@@ -253,7 +252,7 @@
             ctx.font = `${playerWidth}px Arial`;
             ctx.fillStyle = 'blue';
             ctx.textAlign = 'center';
-            ctx.fillText('🚗', playerX + playerWidth / 2, playerY + playerHeight / 1.5);
+            ctx.fillText('🚗', playerX + playerWidth / 2, playerY + playerHeight / 1.5); // Car emoji facing up
         }
 
         function drawObstacles() {
@@ -261,13 +260,13 @@
                 ctx.font = `${playerWidth}px Arial`;
                 ctx.fillStyle = 'red';
                 ctx.textAlign = 'center';
-                ctx.fillText('🚓', obs.x + playerWidth / 2, obs.y + playerHeight / 1.5);
-                obs.y += 5;
+                ctx.fillText('🚓', obs.x + playerWidth / 2, obs.y + playerHeight / 1.5); // Police car emoji facing down
+                obs.y += 5; // Move obstacle down
                 if (obs.y > canvas.height) {
-                    obstacles.splice(index, 1);
+                    obstacles.splice(index, 1); // Remove if off-screen
                 }
-                // Check collision (skip collision during jump)
-                if (!isJumping && obs.y + playerHeight > playerY && obs.y < playerY + playerHeight &&
+                // Check collision
+                if (obs.y + playerHeight > playerY && obs.y < playerY + playerHeight &&
                     obs.x < playerX + playerWidth && obs.x + playerWidth > playerX) {
                     endGame();
                 }
@@ -279,15 +278,16 @@
                 ctx.font = `${playerWidth}px Arial`;
                 ctx.fillStyle = 'green';
                 ctx.textAlign = 'center';
-                ctx.fillText('💰', token.x + playerWidth / 2, token.y + playerHeight / 1.5);
-                token.y += 5;
+                ctx.fillText('💰', token.x + playerWidth / 2, token.y + playerHeight / 1.5); // Token emoji
+                token.y += 5; // Move token down
                 if (token.y > canvas.height) {
-                    tokens.splice(index, 1);
+                    tokens.splice(index, 1); // Remove if off-screen
                 }
-                if (!isJumping && token.y + playerHeight > playerY && token.y < playerY + playerHeight &&
+                // Check collection
+                if (token.y + playerHeight > playerY && token.y < playerY + playerHeight &&
                     token.x < playerX + playerWidth && token.x + playerWidth > playerX) {
-                    tokens.splice(index, 1);
-                    score += 10;
+                    tokens.splice(index, 1); // Remove token
+                    score += 10; // Increase score
                     document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
                 }
             });
@@ -303,18 +303,19 @@
         function gameLoop() {
             draw();
             if (Math.random() < 0.02) {
+                // Create new obstacle
                 obstacles.push({
                     x: Math.floor(Math.random() * 3) * laneWidth,
                     y: -playerHeight
                 });
             }
             if (Math.random() < 0.01) {
+                // Create new token
                 tokens.push({
                     x: Math.floor(Math.random() * 3) * laneWidth,
                     y: -playerHeight
                 });
             }
-            handleJump(); // Update player jump during the loop
         }
 
         function movePlayer(direction) {
@@ -326,59 +327,16 @@
             playerX = playerLane * laneWidth + (laneWidth - playerWidth) / 2;
         }
 
-        function handleJump() {
-            if (isJumping) {
-                playerY -= jumpSpeed * jumpDirection;
-                if (playerY <= jumpStartY - jumpHeight) {
-                    jumpDirection = -1; // Start falling after reaching max height
-                }
-                if (playerY >= jumpStartY) {
-                    playerY = jumpStartY;
-                    isJumping = false;
-                    jumpDirection = 1; // Reset direction for the next jump
-                }
-            }
-        }
-
-        // Mobile-specific: Tap to move left or right, or jump
-        canvas.addEventListener('touchstart', (e) => {
-            const touchX = e.touches[0].clientX;
-            if (!isJumping) {
-                if (touchX < canvas.width / 2) {
-                    movePlayer('left');
-                } else {
-                    movePlayer('right');
-                }
-            }
-        });
-
-        // Double-tap to jump on mobile
-        let lastTap = 0;
-        canvas.addEventListener('touchend', (e) => {
-            const currentTime = new Date().getTime();
-            const tapInterval = currentTime - lastTap;
-            if (tapInterval < 300 && !isJumping) {
-                isJumping = true;
-            }
-            lastTap = currentTime;
-        });
-
-        // Desktop-specific: Arrow keys to move, space to jump
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
                 movePlayer('left');
             } else if (e.key === 'ArrowRight') {
                 movePlayer('right');
-            } else if (e.key === ' ') {
-                if (!isJumping) {
-                    isJumping = true;
-                }
             }
         });
 
         resetGame(); // Start the game on page load
     };
-</script>
-
+    </script>
 </body>
 </html>
