@@ -1,0 +1,58 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(120deg, #ff0081, #ff9a00, #fffa00, #00ff48, #00d2ff);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+}
+canvas {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid #fff;
+}
+#scoreDisplay, #timerDisplay {
+    position: absolute;
+    color: #fff;
+    font-size: 20px;
+    top: 50px;
+}
+#scoreDisplay {
+    left: 20px;
+}
+#timerDisplay {
+    right: 20px;
+}
+#walletButtons {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 10px;
+}
+#walletButtons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+#solflareButton {
+    background-color: #0073E6;
+}
+#phantomButton {
+    background-color: #282C34;
+}
+#manualButton {
+    background-color: #61DAFB;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
