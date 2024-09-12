@@ -290,6 +290,12 @@ window.onload = function() {
         }
     });
 
+    //Adding event listeners...
+    document.getElementById('solflareButton').addEventListener('click', connectSolflare);
+    document.getElementById('phantomButton').addEventListener('click', connectPhantom);
+    document.getElementById('manualButton').addEventListener('click', manualInput);
+
+
     resetGame(); // Start the game on page load
 };
 
