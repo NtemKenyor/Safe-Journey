@@ -100,11 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Adjust canvas size to fit screen
+    // Adjust canvas size to fit its parent container
     function resizeCanvas() {
-        canvas.width = window.innerWidth > 600 ? 600 : window.innerWidth;
-        canvas.height = window.innerHeight > 800 ? 800 : window.innerHeight;
+        const parent = canvas.parentElement;
+        canvas.width = parent.clientWidth > 600 ? 600 : parent.clientWidth;
+        canvas.height = parent.clientHeight > 800 ? 800 : parent.clientHeight;
     }
+
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
