@@ -155,7 +155,7 @@ window.onload = function() {
         clearInterval(gameInterval);
         clearInterval(timerInterval);
         await alert_(`Game Over! Your score: ${score}`);
-        const walletChoice = await prompt_("Do you have a Solana wallet: Solfare or Phantom? (yes/no)").toLowerCase();
+        const walletChoice = await confirm_("Do you have a Solana wallet: Solfare or Phantom? (yes/no)");
         if (walletChoice === 'yes') {
             document.getElementById('walletButtons').style.display = 'flex';
         } else {
