@@ -9,14 +9,23 @@
     <meta name="dscvr:canvas:version" content="vNext">
     <meta name="og:image" content="https://roynek.com/Safe-Journey/game_icon.png">
     
-    <meta http-equiv="Content-Security-Policy" content="
+    <!-- <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
     script-src 'self' https://apis.example.com https://cdn.jsdelivr.net; 
     script-src-elem 'self' https://apis.example.com https://cdn.jsdelivr.net; 
     style-src 'self' 'unsafe-inline' https://cdn.example.com; 
     img-src 'self' https://your-image-host.com; 
     font-src 'self' https://fonts.gstatic.com; 
+    connect-src 'self' https://api.solana.com;"> -->
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' https://apis.example.com https://cdn.jsdelivr.net 'unsafe-eval' 'wasm-unsafe-eval'; 
+    script-src-elem 'self' https://apis.example.com https://cdn.jsdelivr.net 'unsafe-eval' 'wasm-unsafe-eval'; 
+    style-src 'self' 'unsafe-inline' https://cdn.example.com; 
+    img-src 'self' https://your-image-host.com; 
+    font-src 'self' https://fonts.gstatic.com; 
     connect-src 'self' https://api.solana.com;">
+
 
     <link rel="stylesheet" href="styles.css">
 

@@ -95,7 +95,8 @@
     }
 
 
-window.onload = function() {
+// window.onload = function() {
+document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -297,7 +298,8 @@ window.onload = function() {
 
 
     resetGame(); // Start the game on page load
-};
+    
+});
 
 
 
