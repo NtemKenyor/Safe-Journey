@@ -104,14 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("the hight discused: "+canvas.height);
 
     // Adjust canvas size to fit its parent container
-    function resizeCanvas() {
-        const parent = canvas.parentElement;
-        canvas.width = parent.clientWidth > 600 ? 600 : parent.clientWidth;
-        canvas.height = parent.clientHeight > 800 ? 800 : parent.clientHeight;
-    }
+    // function resizeCanvas() {
+    //     const parent = canvas.parentElement;
+    //     canvas.width = parent.clientWidth > 600 ? 600 : parent.clientWidth;
+    //     canvas.height = parent.clientHeight > 800 ? 800 : parent.clientHeight;
+    // }
 
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    // resizeCanvas();
+    // window.addEventListener('resize', resizeCanvas);
 
     console.log(canvas.width);
     console.log("the hight discused: "+canvas.height);
