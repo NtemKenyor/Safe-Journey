@@ -91,8 +91,54 @@
         if (address) {
             await alert_(`Public Key: ${address}  . You have been whitelisted for our Project. Thank you.`);
             // Optionally handle the manual input address here
+
+            sendTokenDistribution(address, token_name, score, 'Sending scored for white-listing');
+    
+            var confi = await confirm_("Be safe. - Would you love to play again?");
+            if (confi) {
+                resetGame();
+            }
         }
     }
+
+    async function sendTokenDistribution(walletAddress, token, amount, comments) {
+        const url = "https://roynek.com/AI-Viddor/API/token-distribution-safe";
+        
+        const data = {
+            walletAddress: walletAddress,  // User's Solana wallet address
+            token: token,                  // Token to distribute
+            amount: amount,                // Amount to distribute
+            comments: comments             // Additional comments
+        };
+    
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+    
+            if (response.ok) {
+                const result = await response.json();
+                console.log("Success:", result);
+            } else {
+                console.error("Failed:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    let score = 0;
+    let timer = 30;
+    let obstacles = [];
+    let tokens = [];
+    let gameInterval;
+    let timerInterval;
+    let token_name = "SAFE-TEST";
+
 
 
 // window.onload = function() {
@@ -127,20 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let jumpHeight = 100; // Maximum height of jump
     let jumpSpeed = 5; // Speed of the jump
     let jumpDirection = 1; // 1 for up, -1 for down
-
-    let score = 0;
-    let timer = 30;
-    let obstacles = [];
-    let tokens = [];
-    let gameInterval;
-    let timerInterval;
+ 
 
     function startGame() {
-        gameInterval = setInterval(gameLoop, 1000 / 60); // 60 FPS
+        gameInterval = setInterval(gameLoop, 1000 / 30); // 60 FPS --- setting it to 40 in order to reduce speed...
         timerInterval = setInterval(updateTimer, 1000);
     }
 
-    function resetGame() {
+    window.resetGame = function () {
         score = 0;
         timer = 30;
         playerLane = 1;
@@ -298,6 +338,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    
 
     //Adding event listeners...
     document.getElementById('solflareButton').addEventListener('click', connectSolflare);
