@@ -100,6 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
+    console.log(canvas.width);
+    console.log("the hight discused: "+canvas.height);
+
     // Adjust canvas size to fit its parent container
     function resizeCanvas() {
         const parent = canvas.parentElement;
@@ -109,6 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+
+    console.log(canvas.width);
+    console.log("the hight discused: "+canvas.height);
 
     const laneWidth = canvas.width / 3;
     const playerHeight = canvas.height / 12;
