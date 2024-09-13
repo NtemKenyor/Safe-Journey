@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,332 +9,41 @@
     <meta name="dscvr:canvas:version" content="vNext">
     <meta name="og:image" content="https://roynek.com/Safe-Journey/game_icon.png">
     
-    <style>
-        body {
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(120deg, #ff0081, #ff9a00, #fffa00, #00ff48, #00d2ff);
-            background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
-        }
-        canvas {
-            background-color: rgba(0, 0, 0, 0.8);
-            border: 1px solid #fff;
-        }
-        #scoreDisplay, #timerDisplay {
-            position: absolute;
-            color: #fff;
-            font-size: 20px;
-            top: 50px;
-        }
-        #scoreDisplay {
-            left: 20px;
-        }
-        #timerDisplay {
-            right: 20px;
-        }
-        #walletButtons {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: none;
-            gap: 10px;
-        }
-        #walletButtons button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #solflareButton {
-            background-color: #0073E6;
-        }
-        #phantomButton {
-            background-color: #282C34;
-        }
-        #manualButton {
-            background-color: #61DAFB;
-        }
+    <!-- <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' https://apis.example.com https://cdn.jsdelivr.net; 
+    script-src-elem 'self' https://apis.example.com https://cdn.jsdelivr.net; 
+    style-src 'self' 'unsafe-inline' https://cdn.example.com; 
+    img-src 'self' https://your-image-host.com; 
+    font-src 'self' https://fonts.gstatic.com; 
+    connect-src 'self' https://api.solana.com;"> -->
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' https://apis.example.com https://cdn.jsdelivr.net 'unsafe-eval' 'wasm-unsafe-eval'; 
+    script-src-elem 'self' https://apis.example.com https://cdn.jsdelivr.net 'unsafe-eval' 'wasm-unsafe-eval'; 
+    style-src 'self' 'unsafe-inline' https://cdn.example.com; 
+    img-src 'self' https://your-image-host.com; 
+    font-src 'self' https://fonts.gstatic.com; 
+    connect-src 'self' https://api.solana.com;">
 
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
-        }
-    </style>
+
+    <link rel="stylesheet" href="styles.css">
+     <!-- Include Solana Web3.js -->
+     <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+     <script src="script_pops.js" defer></script>
+     <script src="script.js?id=7457538" defer></script>
+
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas" width="500px" height="600px"></canvas>
     <div id="scoreDisplay">Score: 0</div>
     <div id="timerDisplay">Time: 30</div>
     <div id="walletButtons">
-        <button id="solflareButton" onclick="connectSolflare()">Connect Solflare</button>
-        <button id="phantomButton" onclick="connectPhantom()">Connect Phantom</button>
-        <button id="manualButton" onclick="manualInput()">Manual Input</button>
+        <button id="solflareButton">Connect Solflare</button>
+        <button id="phantomButton">Connect Phantom</button>
+        <button id="manualButton">Manual Input</button>
     </div>
 
-    <!-- Include Solana Web3.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 
-    <!-- Custom Solflare Wallet Adapter -->
-    <script>
-        class SolflareWalletAdapter {
-            constructor() {
-                this.connected = false;
-                this.publicKey = null;
-            }
-
-            async connect() {
-                try {
-                    const provider = window.solflare;
-                    if (provider) {
-                        await provider.connect();
-                        this.publicKey = provider.publicKey.toString();
-                        this.connected = true;
-                    } else {
-                        alert("Solflare wallet is not installed.");
-                    }
-                } catch (err) {
-                    console.error(err);
-                    this.connected = false;
-                }
-            }
-
-            disconnect() {
-                if (this.connected) {
-                    window.solflare.disconnect();
-                    this.connected = false;
-                    this.publicKey = null;
-                }
-            }
-        }
-
-        class PhantomWalletAdapter {
-            constructor() {
-                this.connected = false;
-                this.publicKey = null;
-            }
-
-            async connect() {
-                try {
-                    const provider = window.solana;
-                    if (provider && provider.isPhantom) {
-                        await provider.connect();
-                        this.publicKey = provider.publicKey.toString();
-                        this.connected = true;
-                    } else {
-                        alert("Phantom wallet is not installed.");
-                    }
-                } catch (err) {
-                    console.error(err);
-                    this.connected = false;
-                }
-            }
-
-            disconnect() {
-                if (this.connected) {
-                    window.solana.disconnect();
-                    this.connected = false;
-                    this.publicKey = null;
-                }
-            }
-        }
-
-        async function connectSolflare() {
-            const solflareWallet = new SolflareWalletAdapter();
-            await solflareWallet.connect();
-
-            if (solflareWallet.connected) {
-                alert(`Connected! Public Key: ${solflareWallet.publicKey} . You have been whitelisted for our Project. Thank you.`);
-                // Optionally handle the connected wallet here
-            } else {
-                alert("Failed to connect Solflare wallet.");
-            }
-        }
-
-        async function connectPhantom() {
-            const phantomWallet = new PhantomWalletAdapter();
-            await phantomWallet.connect();
-
-            if (phantomWallet.connected) {
-                alert(`Connected! Public Key: ${phantomWallet.publicKey} . You have been whitelisted for our Project. Thank you.`);
-                // Optionally handle the connected wallet here
-            } else {
-                alert("Failed to connect Phantom wallet.");
-            }
-        }
-
-        function manualInput() {
-            const address = prompt("Enter your Solana address:");
-            if (address) {
-                alert(`Public Key: ${address}  . You have been whitelisted for our Project. Thank you.`);
-                // Optionally handle the manual input address here
-            }
-        }
-    </script>
-
-    <script>
-    window.onload = function() {
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // Adjust canvas size to fit screen
-        function resizeCanvas() {
-            canvas.width = window.innerWidth > 600 ? 600 : window.innerWidth;
-            canvas.height = window.innerHeight > 800 ? 800 : window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        const laneWidth = canvas.width / 3;
-        const playerHeight = canvas.height / 12;
-        const playerWidth = laneWidth / 2;
-        let playerX = laneWidth + (laneWidth - playerWidth) / 2;
-        let playerY = canvas.height - playerHeight - 20;
-        let playerLane = 1;
-
-        let score = 0;
-        let timer = 30;
-        let obstacles = [];
-        let tokens = [];
-        let gameInterval;
-        let timerInterval;
-
-        function startGame() {
-            gameInterval = setInterval(gameLoop, 1000 / 60); // 60 FPS
-            timerInterval = setInterval(updateTimer, 1000);
-        }
-
-        function resetGame() {
-            score = 0;
-            timer = 30;
-            playerLane = 1;
-            playerX = laneWidth + (laneWidth - playerWidth) / 2;
-            obstacles = [];
-            tokens = [];
-            clearInterval(gameInterval);
-            clearInterval(timerInterval);
-            startGame();
-        }
-
-        function updateTimer() {
-            timer--;
-            document.getElementById('timerDisplay').innerText = `Time: ${timer}`;
-            if (timer <= 0) {
-                endGame();
-            }
-        }
-
-        function endGame() {
-            clearInterval(gameInterval);
-            clearInterval(timerInterval);
-            alert(`Game Over! Your score: ${score}`);
-            const walletChoice = prompt("Do you have a Solana wallet: Solfare or Phantom? (yes/no)").toLowerCase();
-            if (walletChoice === 'yes') {
-                // Open wallet selection buttons
-                document.getElementById('walletButtons').style.display = 'flex';
-            } else {
-                // Manual input
-                manualInput();
-            }
-        }
-
-        function drawPlayer() {
-            ctx.font = `${playerWidth}px Arial`;
-            ctx.fillStyle = 'blue';
-            ctx.textAlign = 'center';
-            ctx.fillText('🚗', playerX + playerWidth / 2, playerY + playerHeight / 1.5); // Car emoji facing up
-        }
-
-        function drawObstacles() {
-            obstacles.forEach((obs, index) => {
-                ctx.font = `${playerWidth}px Arial`;
-                ctx.fillStyle = 'red';
-                ctx.textAlign = 'center';
-                ctx.fillText('🚓', obs.x + playerWidth / 2, obs.y + playerHeight / 1.5); // Police car emoji facing down
-                obs.y += 5; // Move obstacle down
-                if (obs.y > canvas.height) {
-                    obstacles.splice(index, 1); // Remove if off-screen
-                }
-                // Check collision
-                if (obs.y + playerHeight > playerY && obs.y < playerY + playerHeight &&
-                    obs.x < playerX + playerWidth && obs.x + playerWidth > playerX) {
-                    endGame();
-                }
-            });
-        }
-
-        function drawTokens() {
-            tokens.forEach((token, index) => {
-                ctx.font = `${playerWidth}px Arial`;
-                ctx.fillStyle = 'green';
-                ctx.textAlign = 'center';
-                ctx.fillText('💰', token.x + playerWidth / 2, token.y + playerHeight / 1.5); // Token emoji
-                token.y += 5; // Move token down
-                if (token.y > canvas.height) {
-                    tokens.splice(index, 1); // Remove if off-screen
-                }
-                // Check collection
-                if (token.y + playerHeight > playerY && token.y < playerY + playerHeight &&
-                    token.x < playerX + playerWidth && token.x + playerWidth > playerX) {
-                    tokens.splice(index, 1); // Remove token
-                    score += 10; // Increase score
-                    document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
-                }
-            });
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawPlayer();
-            drawObstacles();
-            drawTokens();
-        }
-
-        function gameLoop() {
-            draw();
-            if (Math.random() < 0.02) {
-                // Create new obstacle
-                obstacles.push({
-                    x: Math.floor(Math.random() * 3) * laneWidth,
-                    y: -playerHeight
-                });
-            }
-            if (Math.random() < 0.01) {
-                // Create new token
-                tokens.push({
-                    x: Math.floor(Math.random() * 3) * laneWidth,
-                    y: -playerHeight
-                });
-            }
-        }
-
-        function movePlayer(direction) {
-            if (direction === 'left' && playerLane > 0) {
-                playerLane--;
-            } else if (direction === 'right' && playerLane < 2) {
-                playerLane++;
-            }
-            playerX = playerLane * laneWidth + (laneWidth - playerWidth) / 2;
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
-                movePlayer('left');
-            } else if (e.key === 'ArrowRight') {
-                movePlayer('right');
-            }
-        });
-
-        resetGame(); // Start the game on page load
-    };
-    </script>
 </body>
 </html>
