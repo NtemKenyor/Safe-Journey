@@ -205,7 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(timerInterval);
         await alert_(`Game Over! Your score: ${score}`);
         const walletChoice = await confirm_("Do you have a Solana wallet: Solfare or Phantom? (yes/no)");
-        if (walletChoice === 'yes') {
+        console.log(walletChoice);
+        if (walletChoice) {
+            console.log("ENter the right/yes section");
             document.getElementById('walletButtons').style.display = 'flex';
         } else {
             manualInput();

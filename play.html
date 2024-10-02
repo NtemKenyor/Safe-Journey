@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Journey Game</title>
+    <!-- Add this in the <head> section -->
+    <link rel="icon" href="https://roynek.com/Safe-Journey/game_icon.png" type="image/x-icon">
+
+    <!-- DSCVR Canvas Meta Tags -->
+    <meta name="dscvr:canvas:version" content="vNext">
+    <meta name="og:image" content="https://roynek.com/Safe-Journey/game_icon.png">
+    
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' https://apis.example.com https://cdn.jsdelivr.net https://roynek.com 'unsafe-eval' 'wasm-unsafe-eval'; 
+    script-src-elem 'self' https://apis.example.com https://cdn.jsdelivr.net 'unsafe-eval' 'wasm-unsafe-eval'; 
+    style-src 'self' 'unsafe-inline' https://cdn.example.com; 
+    img-src 'self' https://your-image-host.com; 
+    font-src 'self' https://fonts.gstatic.com; 
+    connect-src 'self' https://api.solana.com https://roynek.com;">
+
+
+
+    <link rel="stylesheet" href="styles.css?id=hvurhgh48859">
+     <!-- Include Solana Web3.js -->
+     <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+     <script src="script_pops.js" defer></script>
+     <script src="script.js?id=7457538" defer></script>
+
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="scoreDisplay">Score: 0</div>
+    <div id="timerDisplay">Time: 30</div>
+    <div id="walletButtons">
+        <button id="solflareButton">Connect Solflare</button>
+        <button id="phantomButton">Connect Phantom</button>
+        <button id="manualButton">Manual Input</button>
+    </div>
+
+
+</body>
+</html>

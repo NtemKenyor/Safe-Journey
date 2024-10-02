@@ -9,12 +9,31 @@ body {
     background-size: 400% 400%;
     animation: gradientAnimation 15s ease infinite;
 }
+/* canvas {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid #fff;
+    width: 100%;
+    height: 100vh;
+} */
 canvas {
     background-color: rgba(0, 0, 0, 0.8);
     border: 1px solid #fff;
     width: 100%;
     height: 100vh;
 }
+
+@media (min-width: 768px) {
+    canvas {
+        width: 50%;
+    }
+}
+
+@media (min-width: 1024px) {
+    canvas {
+        width: 600px;
+    }
+}
+
 #scoreDisplay, #timerDisplay {
     position: absolute;
     color: #fff;

@@ -1,42 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safe Journey Game</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Add this in the <head> section -->
+  <link rel="icon" href="https://roynek.com/Safe-Journey/game_icon.png" type="image/x-icon">
 
-    <!-- DSCVR Canvas Meta Tags -->
-    <meta name="dscvr:canvas:version" content="vNext">
-    <meta name="og:image" content="https://roynek.com/Safe-Journey/game_icon.png">
-    
-    <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self'; 
-    script-src 'self' https://apis.example.com https://cdn.jsdelivr.net https://roynek.com 'unsafe-eval' 'wasm-unsafe-eval'; 
-    script-src-elem 'self' https://apis.example.com https://cdn.jsdelivr.net 'unsafe-eval' 'wasm-unsafe-eval'; 
-    style-src 'self' 'unsafe-inline' https://cdn.example.com; 
-    img-src 'self' https://your-image-host.com; 
-    font-src 'self' https://fonts.gstatic.com; 
-    connect-src 'self' https://api.solana.com https://roynek.com;">
+  <title>Safe Journey - Welcome</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #0c0d22;
+      overflow: hidden;
+      font-family: 'Press Start 2P', cursive;
+      color: white;
+    }
 
-    <link rel="stylesheet" href="styles.css?id=hvurhgh48859">
-     <!-- Include Solana Web3.js -->
-     <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest/lib/index.iife.min.js"></script>
-     <script src="script_pops.js" defer></script>
-     <script src="script.js?id=7457538" defer></script>
+    .container {
+      text-align: center;
+    }
 
+    .title {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #ffcc00;
+    }
+
+    .description {
+      font-size: 1.2em;
+      margin-bottom: 40px;
+      color: #ffffffcc;
+    }
+
+    .play-btn {
+      display: inline-block;
+      padding: 15px 30px;
+      background-color: #ffcc00;
+      color: #0c0d22;
+      font-size: 1.2em;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* Flying shapes */
+    .shape {
+      position: absolute;
+      background-color: #ffcc00;
+      border-radius: 50%;
+      animation: float 20s infinite ease-in-out;
+      opacity: 0.7;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-100vh); }
+      100% { transform: translateY(0); }
+    }
+
+    .shape1 { width: 40px; height: 40px; top: 90%; left: 20%; }
+    .shape2 { width: 60px; height: 60px; top: 70%; left: 80%; animation-duration: 15s; }
+    .shape3 { width: 80px; height: 80px; top: 50%; left: 10%; animation-duration: 25s; }
+    .shape4 { width: 50px; height: 50px; top: 30%; left: 70%; animation-duration: 12s; }
+    .shape5 { width: 30px; height: 30px; top: 20%; left: 40%; animation-duration: 18s; }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2em;
+      }
+      .description {
+        font-size: 1em;
+      }
+      .play-btn {
+        font-size: 1em;
+        padding: 12px 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.5em;
+      }
+      .description {
+        font-size: 0.9em;
+      }
+      .play-btn {
+        font-size: 0.9em;
+        padding: 10px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <div id="scoreDisplay">Score: 0</div>
-    <div id="timerDisplay">Time: 30</div>
-    <div id="walletButtons">
-        <button id="solflareButton">Connect Solflare</button>
-        <button id="phantomButton">Connect Phantom</button>
-        <button id="manualButton">Manual Input</button>
-    </div>
+  <div class="container">
+    <h1 class="title">Welcome to Safe Journey!</h1>
+    <p class="description">Prepare yourself for a thrilling journey where every obstacle brings reward. Navigate your way and collect tokens as you play!</p>
+    <a href="play.html" class="play-btn">Play Now</a>
+  </div>
 
-
+  <!-- Flying shapes for animation -->
+  <div class="shape shape1"></div>
+  <div class="shape shape2"></div>
+  <div class="shape shape3"></div>
+  <div class="shape shape4"></div>
+  <div class="shape shape5"></div>
 </body>
 </html>
+
